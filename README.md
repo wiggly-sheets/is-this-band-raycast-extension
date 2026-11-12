@@ -31,8 +31,8 @@ A Raycast extension for the **Is This Band...?** family of sites. Find out wheth
 This extension isn't published to the Raycast Store yet. Run it locally:
 
 ```sh
-git clone <your-repo-url>
-cd is-this-band-raycast-extension
+git clone https://github.com/wiggly-sheets/It-This-Band...-Raycast-Extension.git
+cd It-This-Band...-Raycast-Extension
 npm install
 npm run dev
 ```
