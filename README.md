@@ -20,7 +20,7 @@ The site's commentary is shown in the detail panel, so long answers wrap instead
 
 3. Open Raycast, search for **Is This Band...?**, then choose a genre from the dropdown next to the search bar. Your last genre is remembered between launches.
 
-The query is debounced as you type. Press <kbd>↵</kbd> to copy the verdict, <kbd>⌘</kbd>+<kbd>O</kbd> to open the result on the website, or <kbd>⌘</kbd>+<kbd>R</kbd> to refresh. If a band isn't in a site's system and the site offers a prefilled tweet, a **Tweet to Expedite Ruling** action opens X with the same message the site uses.
+The query is debounced as you type. Press <kbd>↵</kbd> to copy the verdict, <kbd>⌘</kbd>+<kbd>O</kbd> to open the result on the website, or <kbd>⌘</kbd>+<kbd>R</kbd> to refresh. If a band isn't in a site's system and the site offers a prefilled tweet, a **Tweet to Expedite Ruling** action opens X's compose window (via `x.com/intent/post`) with the same message the site uses.
 
 ## The sites
 
@@ -35,6 +35,8 @@ The query is debounced as you type. Press <kbd>↵</kbd> to copy the verdict, <k
 ## How it works
 
 The sites have no public API, so the extension requests each site's `?band=<name>` page and parses the verdict, commentary, and any cross-link to a sibling genre site. Results are not cached; each query is fetched fresh.
+
+Some sites still use the legacy `twitter.com/home?status=` link for pre-filled tweets. The extension converts that to X's supported `x.com/intent/post?text=` endpoint so the compose window actually opens with the text filled in.
 
 ## Scripts
 

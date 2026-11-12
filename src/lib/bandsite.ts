@@ -131,8 +131,23 @@ function parseRelated(html: string): RelatedVerdict | undefined {
 }
 
 function parseTweetUrl(html: string): string | undefined {
-  const url = html.match(TWEET_LINK_PATTERN)?.[1];
-  return url ? decodeEntities(url) : undefined;
+  const rawUrl = html.match(TWEET_LINK_PATTERN)?.[1];
+  return rawUrl ? normalizeTweetUrl(decodeEntities(rawUrl)) : undefined;
+}
+
+function normalizeTweetUrl(rawUrl: string): string {
+  try {
+    const url = new URL(rawUrl);
+    const status = url.searchParams.get("status");
+
+    if (url.pathname === "/home" && status) {
+      return `https://x.com/intent/post?text=${encodeURIComponent(status.trim())}`;
+    }
+  } catch {
+    // Keep the original URL if it can't be parsed.
+  }
+
+  return rawUrl;
 }
 
 function toText(html: string): string {
