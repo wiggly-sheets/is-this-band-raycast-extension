@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "is-this-band-emo",
-  "title": "Is This Band Emo?",
-  "description": "Type a band name and find out whether they're emo, with commentary from isthisbandemo.com.",
+  "name": "is-this-band",
+  "title": "Is This Band...?",
+  "description": "Find out if a band is emo, punk, metal, hardcore, or indie across the Is This Band...? family of sites.",
   "icon": "extension-icon.png",
   "author": "zeb",
   "categories": [
@@ -13,9 +13,19 @@
   "commands": [
     {
       "name": "index",
-      "title": "Is This Band Emo?",
-      "description": "Check whether a band is emo using isthisbandemo.com.",
-      "keywords": ["emo", "band", "music", "genre"],
+      "title": "Is This Band...?",
+      "subtitle": "Emo, Punk, Metal, Hardcore, Indie",
+      "description": "Check whether a band fits a genre using the Is This Band...? family of sites.",
+      "keywords": [
+        "emo",
+        "punk",
+        "metal",
+        "hardcore",
+        "indie",
+        "band",
+        "music",
+        "genre"
+      ],
       "mode": "view"
     }
   ],

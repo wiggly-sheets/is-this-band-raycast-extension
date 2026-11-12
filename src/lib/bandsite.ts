@@ -1,4 +1,6 @@
-export type BandStatus = "emo" | "not-emo" | "unknown" | "unrecognized";
+import type { Genre } from "./genres";
+
+export type BandStatus = "yes" | "no" | "unknown" | "unrecognized";
 
 export interface RelatedVerdict {
   /** The full sentence, e.g. "Blink-182 is punk." */
@@ -20,7 +22,6 @@ export interface BandResult {
   url: string;
 }
 
-const BASE_URL = "https://isthisbandemo.com/";
 const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
@@ -38,12 +39,12 @@ const NAMED_ENTITIES: Record<string, string> = {
   quot: '"',
 };
 
-export function bandUrl(band: string): string {
-  return `${BASE_URL}?band=${encodeURIComponent(band.trim())}`;
+export function siteUrl(genre: Genre, band: string): string {
+  return `https://${genre.domain}/?band=${encodeURIComponent(band.trim())}`;
 }
 
-export async function fetchBandResult(band: string, signal?: AbortSignal): Promise<BandResult> {
-  const url = bandUrl(band);
+export async function fetchBandResult(genre: Genre, band: string, signal?: AbortSignal): Promise<BandResult> {
+  const url = siteUrl(genre, band);
   let response: Response;
 
   try {
@@ -59,17 +60,17 @@ export async function fetchBandResult(band: string, signal?: AbortSignal): Promi
       throw error;
     }
 
-    throw new Error("Couldn't reach isthisbandemo.com. Check your connection and try again.");
+    throw new Error(`Couldn't reach ${genre.domain}. Check your connection and try again.`);
   }
 
   if (!response.ok) {
-    throw new Error(`Is This Band Emo? responded with HTTP ${response.status}.`);
+    throw new Error(`${genre.siteName} responded with HTTP ${response.status}.`);
   }
 
-  return parseBandPage(await response.text(), band);
+  return parseBandPage(await response.text(), genre, band);
 }
 
-export function parseBandPage(html: string, band: string): BandResult {
+export function parseBandPage(html: string, genre: Genre, band: string): BandResult {
   const verdict = toText(html.match(VERDICT_PATTERN)?.[1] ?? "");
 
   if (!verdict) {
@@ -81,25 +82,27 @@ export function parseBandPage(html: string, band: string): BandResult {
 
   return {
     band,
-    status: getStatus(verdict),
+    status: getStatus(verdict, genre),
     verdict,
     commentary: commentary || undefined,
     related,
-    url: bandUrl(band),
+    url: siteUrl(genre, band),
   };
 }
 
-function getStatus(verdict: string): BandStatus {
+function getStatus(verdict: string, genre: Genre): BandStatus {
   if (/\bis not in our system\b/i.test(verdict)) {
     return "unknown";
   }
 
-  if (/\bis not an emo band\b/i.test(verdict)) {
-    return "not-emo";
+  const genreName = escapeRegExp(genre.name);
+
+  if (new RegExp(`\\bis not an? ${genreName} band\\b`, "i").test(verdict)) {
+    return "no";
   }
 
-  if (/\bis an emo band\b/i.test(verdict)) {
-    return "emo";
+  if (new RegExp(`\\bis an? ${genreName} band\\b`, "i").test(verdict)) {
+    return "yes";
   }
 
   return "unrecognized";
@@ -117,7 +120,7 @@ function parseRelated(html: string): RelatedVerdict | undefined {
   return {
     line,
     genre: toText(link[2]),
-    url: link[1],
+    url: link[1].replace(/^http:\/\//i, "https://"),
   };
 }
 
@@ -137,4 +140,8 @@ function decodeEntities(text: string): string {
 
     return NAMED_ENTITIES[code.toLowerCase()] ?? entity;
   });
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
