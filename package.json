@@ -1,0 +1,42 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "is-this-band-emo",
+  "title": "Is This Band Emo?",
+  "description": "Type a band name and find out whether they're emo, with commentary from isthisbandemo.com.",
+  "icon": "extension-icon.png",
+  "author": "zeb",
+  "categories": [
+    "Fun",
+    "Media"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Is This Band Emo?",
+      "description": "Check whether a band is emo using isthisbandemo.com.",
+      "keywords": ["emo", "band", "music", "genre"],
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^2.12.0",
+    "@raycast/utils": "^2.3.3"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.2.0",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "eslint": "^10.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\n\nIt seems like you are trying to publish the Raycast extension. Please note that you should use the `npm run publish` command instead.\n\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
