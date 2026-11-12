@@ -68,6 +68,9 @@ function BandListItem({ result, genre, onReload }: { result: BandResult; genre: 
         <ActionPanel>
           <Action.CopyToClipboard title="Copy Verdict" content={result.verdict} />
           <Action.OpenInBrowser title={`Open on ${genre.siteName}`} url={result.url} />
+          {result.tweetUrl && (
+            <Action.OpenInBrowser title="Tweet to Expedite Ruling" icon={Icon.SpeechBubble} url={result.tweetUrl} />
+          )}
           {result.related && (
             <Action.OpenInBrowser title={`Open ${capitalize(result.related.genre)} Page`} url={result.related.url} />
           )}
@@ -88,7 +91,9 @@ function BandDetail({ result }: { result: BandResult }) {
   const sections = [`# ${result.verdict}`];
 
   if (result.commentary) {
-    sections.push(result.commentary);
+    sections.push(
+      result.tweetUrl ? result.commentary.replace(/\bTweet\b/, `[Tweet](${result.tweetUrl})`) : result.commentary,
+    );
   }
 
   if (result.related) {

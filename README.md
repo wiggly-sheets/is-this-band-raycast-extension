@@ -20,7 +20,7 @@ The site's commentary is shown in the detail panel, so long answers wrap instead
 
 3. Open Raycast, search for **Is This Band...?**, then choose a genre from the dropdown next to the search bar. Your last genre is remembered between launches.
 
-The query is debounced as you type. Press <kbd>↵</kbd> to copy the verdict, <kbd>⌘</kbd>+<kbd>O</kbd> to open the result on the website, or <kbd>⌘</kbd>+<kbd>R</kbd> to refresh.
+The query is debounced as you type. Press <kbd>↵</kbd> to copy the verdict, <kbd>⌘</kbd>+<kbd>O</kbd> to open the result on the website, or <kbd>⌘</kbd>+<kbd>R</kbd> to refresh. If a band isn't in a site's system and the site offers a prefilled tweet, a **Tweet to Expedite Ruling** action opens X with the same message the site uses.
 
 ## The sites
 

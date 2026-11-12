@@ -17,6 +17,8 @@ export interface BandResult {
   verdict: string;
   /** Optional extra commentary, e.g. "Sorry, to anyone over 30 they're pop-punk." */
   commentary?: string;
+  /** A prefilled Twitter compose link from the commentary, when the site offers one. */
+  tweetUrl?: string;
   /** A cross-reference to one of the site's sibling genre sites. */
   related?: RelatedVerdict;
   url: string;
@@ -29,6 +31,7 @@ const VERDICT_PATTERN = /<div class="results col-xs-12">\s*<h2>([\s\S]*?)<\/h2>/
 const COMMENTARY_PATTERN = /<div class="col-xs-8 center">\s*<h4>([\s\S]*?)<\/h4>/i;
 const RELATED_PATTERN = /<div class="col-xs-12 comment">[\s\S]*?<h5>([\s\S]*?)<\/h5>/i;
 const LINK_PATTERN = /<a\b[^>]*href=['"]([^'"]+)['"][^>]*>([\s\S]*?)<\/a>/i;
+const TWEET_LINK_PATTERN = /<a\b[^>]*href=['"]([^'"]*(?:twitter\.com|x\.com)[^'"]*)['"][^>]*>\s*Tweet\s*<\/a>/i;
 
 const NAMED_ENTITIES: Record<string, string> = {
   amp: "&",
@@ -77,7 +80,9 @@ export function parseBandPage(html: string, genre: Genre, band: string): BandRes
     throw new Error("Couldn't find a verdict on the page.");
   }
 
-  const commentary = toText(html.match(COMMENTARY_PATTERN)?.[1] ?? "");
+  const commentaryHtml = html.match(COMMENTARY_PATTERN)?.[1] ?? "";
+  const commentary = toText(commentaryHtml);
+  const tweetUrl = parseTweetUrl(commentaryHtml);
   const related = parseRelated(html);
 
   return {
@@ -85,6 +90,7 @@ export function parseBandPage(html: string, genre: Genre, band: string): BandRes
     status: getStatus(verdict, genre),
     verdict,
     commentary: commentary || undefined,
+    tweetUrl,
     related,
     url: siteUrl(genre, band),
   };
@@ -122,6 +128,11 @@ function parseRelated(html: string): RelatedVerdict | undefined {
     genre: toText(link[2]),
     url: link[1].replace(/^http:\/\//i, "https://"),
   };
+}
+
+function parseTweetUrl(html: string): string | undefined {
+  const url = html.match(TWEET_LINK_PATTERN)?.[1];
+  return url ? decodeEntities(url) : undefined;
 }
 
 function toText(html: string): string {
