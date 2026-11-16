@@ -6,6 +6,21 @@ A Raycast extension for the **Is This Band...?** family of sites. Find out wheth
 >
 > I hope to never end up on Ocean Avenue. Also, electric violin.
 
+## Install (developer build)
+
+Clone the repo and load it into Raycast locally:
+
+```sh
+git clone https://github.com/wiggly-sheets/is-this-band-raycast-extension.git
+cd is-this-band-raycast-extension
+npm install
+npm run dev
+```
+
+Raycast imports the extension, and it stays available after you stop the dev server. Run `npm run dev` again to pick up code changes.
+
+Requires Raycast 1.26.0+, Node.js 22.14+, and npm 7+.
+
 ## Features
 
 - **Search as you type** — results update after a short debounce
